@@ -139,7 +139,7 @@ python train_RFB.py -d VOC -v RFB_vgg -s 300
 To evaluate a trained network:
 
 ```Shell
-python test_RFB.py -d VOC -v RFB_vgg -s 300 --trained_models /path/to/model/weights
+python test_RFB.py -d VOC -v RFB_vgg -s 300 --trained_model /path/to/model/weights
 ```
 By default, it will directly output the mAP results on VOC2007 *test* or COCO *minival2014*. For VOC2012 *test* and COCO *test-dev* results, you can manually change the datasets in the `test_RFB.py` file, then save the detection results and submitted to the server. 
 
