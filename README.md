@@ -5,9 +5,7 @@ By Songtao Liu, Di Huang, Yunhong Wang
 ### Introduction
 Inspired by the structure of Receptive Fields (RFs) in human visual systems, we propose a novel RF Block (RFB) module, which takes the relationship between the size and eccentricity of RFs into account, to enhance the discriminability and robustness of features. We further  assemble the RFB module to the top of SSD with a lightweight CNN model, constructing the RFB Net detector. You can use the code to train/evaluate the RFB Net for object detection. For more details, please refer to our [arXiv paper](https://arxiv.org/pdf/1711.07767.pdf). 
 
-<p align="left">
-<img src="https://github.com/ruinmessi/RFBNet/tree/master/doc/RFB.png" alt="RFB Structure" width="777px">
-</p>
+<img align="right" src="https://github.com/ruinmessi/RFBNet/tree/master/doc/RFB.png" width="777px">
 
 ### VOC2007 Test
 | System |  *mAP* | **FPS** (Titan X Maxwell) |
@@ -31,6 +29,8 @@ Inspired by the structure of Receptive Fields (RFs) in human visual systems, we 
 | RFBNet300 (VGG16) | **29.9** |**15ms\*** | 
 | RFBNet512 (VGG16) | **33.8** | **30ms\*** |
 | RFBNet512-E (VGG16) | **34.4** | **33ms\*** |  
+
+
 *Note*: **\*** The speed here is tested on the newest pytorch and cudnn version (0.2.0 and cudnnV6), which is obviously faster than the speed reported in paper (using pytorch-0.1.12 and cudnnV5).
 
 ### MobileNet
