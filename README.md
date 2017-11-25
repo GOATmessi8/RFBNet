@@ -7,6 +7,9 @@ Inspired by the structure of Receptive Fields (RFs) in human visual systems, we 
 
 <img align="right" src="https://github.com/ruinmessi/RFBNet/blob/master/doc/rfb.png">
 
+&nbsp;
+&nbsp;
+
 ### VOC2007 Test
 | System |  *mAP* | **FPS** (Titan X Maxwell) |
 |:-------|:-----:|:-------:|
@@ -114,9 +117,7 @@ $COCO/images/val2014/
 - First download the fc-reduced [VGG-16](https://arxiv.org/abs/1409.1556) PyTorch base network weights at:    https://s3.amazonaws.com/amdegroot-models/vgg16_reducedfc.pth
 or from our [BaiduYun Driver](https://pan.baidu.com/s/1jIP86jW) 
 - MobileNet pre-trained basenet is ported from [MobileNet-Caffe](https://github.com/shicai/MobileNet-Caffe), which achieves slightly better accuracy rates than the original one reported in the [paper](https://arxiv.org/abs/1704.04861):
-https://drive.google.com/open?id=13aZSApybBDjzfGIdqN1INBlPsddxCK14
-
-or [BaiduYun Driver](https://pan.baidu.com/s/1dFKZhdv)
+https://drive.google.com/open?id=13aZSApybBDjzfGIdqN1INBlPsddxCK14 or [BaiduYun Driver](https://pan.baidu.com/s/1dFKZhdv)
 
 - By default, we assume you have downloaded the file in the `RFBNet/weights` dir:
 ```Shell
