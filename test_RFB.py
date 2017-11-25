@@ -35,10 +35,6 @@ parser.add_argument('--retest', default=False, type=bool,
                     help='test cache results')
 args = parser.parse_args()
 
-if not os.path.exists(args.save_folder):
-    os.mkdir(args.save_folder)
-
-
 if args.dataset == 'VOC':
     cfg = (VOC_300, VOC_512)[args.size == '512']
 else:
@@ -59,6 +55,9 @@ priors = Variable(priorbox.forward(), volatile=True)
 
 
 def test_net(save_folder, net, detector, cuda, testset, transform, max_per_image=300, thresh=0.005):
+
+    if not os.path.exists(save_folder):
+        os.mkdir(save_folder)
     # dump predictions and assoc. ground truth to text file for now
     num_images = len(testset)
     num_classes = (21, 81)[args.dataset == 'COCO']
