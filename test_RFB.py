@@ -35,6 +35,9 @@ parser.add_argument('--retest', default=False, type=bool,
                     help='test cache results')
 args = parser.parse_args()
 
+if not os.path.exists(args.save_folder):
+    os.mkdir(args.save_folder)
+
 if args.dataset == 'VOC':
     cfg = (VOC_300, VOC_512)[args.size == '512']
 else:
