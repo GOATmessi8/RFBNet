@@ -116,7 +116,12 @@ or from our [BaiduYun Driver](https://pan.baidu.com/s/1jIP86jW)
 - MobileNet pre-trained basenet is ported from [MobileNet-Caffe](https://github.com/shicai/MobileNet-Caffe), which achieves slightly better accuracy rates than the original one reported in the [paper](https://arxiv.org/abs/1704.04861):
 https://drive.google.com/open?id=13aZSApybBDjzfGIdqN1INBlPsddxCK14
 [BaiduYun Driver](https://pan.baidu.com/s/1dFKZhdv)
-- By default, we assume you have downloaded the file in the `RFBNet/weights` dir.
+- By default, we assume you have downloaded the file in the `RFBNet/weights` dir:
+```Shell
+mkdir weights
+cd weights
+wget https://s3.amazonaws.com/amdegroot-models/vgg16_reducedfc.pth
+
 - To train RFBNet using the train script simply specify the parameters listed in `train_RFB.py` as a flag or manually change them.
 ```Shell
 python train_RFB.py -d VOC -v RFB_vgg -s 300 
