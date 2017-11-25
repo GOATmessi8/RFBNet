@@ -121,6 +121,7 @@ https://drive.google.com/open?id=13aZSApybBDjzfGIdqN1INBlPsddxCK14
 mkdir weights
 cd weights
 wget https://s3.amazonaws.com/amdegroot-models/vgg16_reducedfc.pth
+```
 
 - To train RFBNet using the train script simply specify the parameters listed in `train_RFB.py` as a flag or manually change them.
 ```Shell
