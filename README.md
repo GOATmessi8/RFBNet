@@ -31,7 +31,7 @@ Inspired by the structure of Receptive Fields (RFs) in human visual systems, we 
 | RFBNet512-E (VGG16) | **34.4** | **33ms\*** |  
 
 
-*Note*: **\*** The speed here is tested on the newest pytorch and cudnn version (0.2.0 and cudnnV6), which is obviously faster than the speed reported in paper (using pytorch-0.1.12 and cudnnV5).
+*Note*: **\*** The speed here is tested on the newest pytorch and cudnn version (0.2.0 and cudnnV6), which is obviously faster than the speed reported in the paper (using pytorch-0.1.12 and cudnnV5).
 
 ### MobileNet
 |System |COCO *minival mAP*| **\#parameters**|
@@ -39,7 +39,7 @@ Inspired by the structure of Receptive Fields (RFs) in human visual systems, we 
 |[SSD MobileNet](https://arxiv.org/abs/1704.04861)| 19.3| 6.8M|
 |RFB MobileNet| 20.7\* | 7.4M|
 
-\*: slightly better than original ones in paper (20.5). 
+\*: slightly better than the original ones in the paper (20.5). 
 
 ### Citing RFB Net
 Please cite our paper in your publications if it helps your research:
@@ -115,7 +115,9 @@ $COCO/images/val2014/
 or from our [BaiduYun Driver](https://pan.baidu.com/s/1jIP86jW) 
 - MobileNet pre-trained basenet is ported from [MobileNet-Caffe](https://github.com/shicai/MobileNet-Caffe), which achieves slightly better accuracy rates than the original one reported in the [paper](https://arxiv.org/abs/1704.04861):
 https://drive.google.com/open?id=13aZSApybBDjzfGIdqN1INBlPsddxCK14
-[BaiduYun Driver](https://pan.baidu.com/s/1dFKZhdv)
+
+or [BaiduYun Driver](https://pan.baidu.com/s/1dFKZhdv)
+
 - By default, we assume you have downloaded the file in the `RFBNet/weights` dir:
 ```Shell
 mkdir weights
