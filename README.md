@@ -1,11 +1,15 @@
-#Receptive Field Block Net for Accurate and Fast Object Detection
+# Receptive Field Block Net for Accurate and Fast Object Detection
 
 By Songtao Liu, Di Huang, Yunhong Wang
 
-###Introduction
+### Introduction
 Inspired by the structure of Receptive Fields (RFs) in human visual systems, we propose a novel RF Block (RFB) module, which takes the relationship between the size and eccentricity of RFs into account, to enhance the discriminability and robustness of features. We further  assemble the RFB module to the top of SSD with a lightweight CNN model, constructing the RFB Net detector. You can use the code to train/evaluate the RFB Net for object detection. For more details, please refer to our [arXiv paper](https://arxiv.org/pdf/1711.07767.pdf). 
 
-###VOC2007 Test
+<p align="left">
+<img src="https://github.com/ruinmessi/RFBNet/tree/master/doc/RFB.png" alt="RFB Structure" width="777px">
+</p>
+
+### VOC2007 Test
 | System |  *mAP* | **FPS** (Titan X Maxwell) |
 |:-------|:-----:|:-------:|
 | [Faster R-CNN (VGG16)](https://github.com/ShaoqingRen/faster_rcnn) | 73.2 | 7 | 
@@ -16,7 +20,7 @@ Inspired by the structure of Receptive Fields (RFs) in human visual systems, we 
 | RFBNet300 (VGG16) | **80.5** |**83\*** | 
 | RFBNet512 (VGG16) | **82.2** | **38\*** | 
 
-###COCO 
+### COCO 
 | System |  *test-dev mAP* | **Time** (Titan X Maxwell) |
 |:-------|:-----:|:-------:|
 | [Faster R-CNN++ (ResNet-101)](https://github.com/KaimingHe/deep-residual-networks) | 34.9 | 3.36s | 
@@ -29,13 +33,15 @@ Inspired by the structure of Receptive Fields (RFs) in human visual systems, we 
 | RFBNet512-E (VGG16) | **34.4** | **33ms\*** |  
 *Note*: **\*** The speed here is tested on the newest pytorch and cudnn version (0.2.0 and cudnnV6), which is obviously faster than the speed reported in paper (using pytorch-0.1.12 and cudnnV5).
 
-###MobileNet
+### MobileNet
 |System |COCO *minival mAP*| **\#parameters**|
 |:-------|:-----:|:-------:|
 |[SSD MobileNet](https://arxiv.org/abs/1704.04861)| 19.3| 6.8M|
 |RFB MobileNet| 20.7\* | 7.4M|
+
 \*: slightly better than original ones in paper (20.5). 
-###Citing RFB Net
+
+### Citing RFB Net
 Please cite our paper in your publications if it helps your research:
 
  @article{liu2017RFB,
@@ -45,7 +51,7 @@ Please cite our paper in your publications if it helps your research:
       year = {2017}
     }
 
-###Contents
+### Contents
 1. [Installation](#installation)
 2. [Datasets](#datasets)
 3. [Training](#training)
@@ -129,7 +135,7 @@ python test_RFB.py -d VOC -v RFB_vgg -s 300 --trained_models /path/to/model/weig
 ```
 By default, it will directly output the mAP results on VOC2007 *test* or COCO *minival2014*. For VOC2012 *test* and COCO *test-dev* results, you can manually change the datasets in the `test_RFB.py` file, then save the detection results and submitted to the server. 
 
-##Models
+## Models
 
 * 07+12 [RFB_Net300](https://drive.google.com/open?id=1V3DjLw1ob89G8XOuUn7Jmg_o-8k_WM3L), [BaiduYun Driver](https://pan.baidu.com/s/1bplRosf)
 * COCO [RFB_Net512_E](https://drive.google.com/open?id=1pHDc6Xg9im3affOr7xaimXaRNOHtbaPM), [BaiduYun Driver](https://pan.baidu.com/s/1o8dxrom)
