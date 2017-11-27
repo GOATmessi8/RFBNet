@@ -109,8 +109,12 @@ def test_net(save_folder, net, detector, cuda, testset, transform, max_per_image
             c_scores = scores[inds, j]
             c_dets = np.hstack((c_bboxes, c_scores[:, np.newaxis])).astype(
                 np.float32, copy=False)
+            if args.dataset == 'VOC':
+                cpu = True
+            else:
+                cpu = False
 
-            keep = nms(c_dets, 0.45, force_cpu=True)
+            keep = nms(c_dets, 0.45, force_cpu=cpu)
             keep = keep[:50]
             c_dets = c_dets[keep, :]
             all_boxes[j][i] = c_dets
