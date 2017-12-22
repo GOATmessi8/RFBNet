@@ -134,6 +134,7 @@ python train_RFB.py -d VOC -v RFB_vgg -s 300
   * -v: choose backbone version, RFB_VGG, RFB_E_VGG or RFB_mobile.
   * -s: image size, 300 or 512.
   * You can pick-up training from a checkpoint by specifying the path as one of the training parameters (again, see `train_RFB.py` for options)
+  * If you want to reproduce the results in the paper, the VOC model should be trained about 240 epoches while the COCO version need 130 epoches.
   
 ## Evaluation
 To evaluate a trained network:
