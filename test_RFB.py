@@ -56,7 +56,7 @@ else:
 priorbox = PriorBox(cfg)
 priors = Variable(priorbox.forward(), volatile=True)
 if not args.cuda:
-    prior = priors.cpu()
+    priors = priors.cpu()
 
 
 def test_net(save_folder, net, detector, cuda, testset, transform, max_per_image=300, thresh=0.005):
