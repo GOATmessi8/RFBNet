@@ -55,6 +55,8 @@ else:
 
 priorbox = PriorBox(cfg)
 priors = Variable(priorbox.forward(), volatile=True)
+if not args.cuda:
+    prior = priors.cpu()
 
 
 def test_net(save_folder, net, detector, cuda, testset, transform, max_per_image=300, thresh=0.005):
@@ -175,6 +177,8 @@ if __name__ == '__main__':
     if args.cuda:
         net = net.cuda()
         cudnn.benchmark = True
+    else:
+        net = net.cpu()
     # evaluation
     #top_k = (300, 200)[args.dataset == 'COCO']
     top_k = 200
