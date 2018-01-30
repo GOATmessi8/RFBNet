@@ -51,14 +51,6 @@ elif args.version == 'RFB_E_vgg':
 elif args.version == 'RFB_mobile':
     from models.RFB_Net_mobile import build_net
     cfg = COCO_mobile_300
-elif args.version == 'RFB_angle':
-    from models.RFB_angle import build_net
-elif args.version == 'SSD_d':
-    from models.SSD_dilated import build_net
-elif args.version == 'SSD_bn':
-    from models.SSD_bn import build_net
-elif args.version == 'SSD':
-    from models.SSD import build_net
 else:
     print('Unkown version!')
 
