@@ -14,7 +14,7 @@ from data import AnnotationTransform, COCODetection, VOCDetection, BaseTransform
 
 import torch.utils.data as data
 from layers.functions import Detect,PriorBox
-from utils.nms_wrapper import nms
+from utils.nms.nms_wrapper import nms
 from utils.timer import Timer
 
 parser = argparse.ArgumentParser(description='Receptive Field Block Net')
@@ -38,6 +38,7 @@ args = parser.parse_args()
 if not os.path.exists(args.save_folder):
     os.mkdir(args.save_folder)
 
+
 if args.dataset == 'VOC':
     cfg = (VOC_300, VOC_512)[args.size == '512']
 else:
@@ -50,26 +51,29 @@ elif args.version == 'RFB_E_vgg':
 elif args.version == 'RFB_mobile':
     from models.RFB_Net_mobile import build_net
     cfg = COCO_mobile_300
+elif args.version == 'RFB_angle':
+    from models.RFB_angle import build_net
+elif args.version == 'SSD_d':
+    from models.SSD_dilated import build_net
+elif args.version == 'SSD_bn':
+    from models.SSD_bn import build_net
+elif args.version == 'SSD':
+    from models.SSD import build_net
 else:
     print('Unkown version!')
 
 priorbox = PriorBox(cfg)
 priors = Variable(priorbox.forward(), volatile=True)
-if not args.cuda:
-    priors = priors.cpu()
 
 
 def test_net(save_folder, net, detector, cuda, testset, transform, max_per_image=300, thresh=0.005):
-
-    if not os.path.exists(save_folder):
-        os.mkdir(save_folder)
     # dump predictions and assoc. ground truth to text file for now
     num_images = len(testset)
     num_classes = (21, 81)[args.dataset == 'COCO']
     all_boxes = [[[] for _ in range(num_images)]
                  for _ in range(num_classes)]
 
-    _t = {'im_detect': Timer(), 'misc': Timer()}
+    _t = {'im_detect': Timer(), 'misc': Timer(), 'total':Timer(), 'input':Timer(),'nms':Timer(), 'cpu':Timer(),'sort':Timer()}
     det_file = os.path.join(save_folder, 'detections.pkl')
 
     if args.retest:
@@ -80,28 +84,68 @@ def test_net(save_folder, net, detector, cuda, testset, transform, max_per_image
         return
 
 
+    empty_array = np.transpose(np.array([[],[],[],[],[]]),(1,0))
+    _t['total'].tic()
     for i in range(num_images):
+        _t['input'].tic()
         img = testset.pull_image(i)
+        scale = torch.Tensor([img.shape[1], img.shape[0],
+                             img.shape[1], img.shape[0]])
         x = Variable(transform(img).unsqueeze(0),volatile=True)
         if cuda:
             x = x.cuda()
+        input_time = _t['input'].toc()
 
         _t['im_detect'].tic()
         out = net(x)      # forward pass
         boxes, scores = detector.forward(out,priors)
-        detect_time = _t['im_detect'].toc()
         boxes = boxes[0]
         scores=scores[0]
 
-        boxes = boxes.cpu().numpy()
-        scores = scores.cpu().numpy()
         # scale each detection back up to the image
-        scale = torch.Tensor([img.shape[1], img.shape[0],
-                             img.shape[1], img.shape[0]]).cpu().numpy()
         boxes *= scale
+        detect_time = _t['im_detect'].toc()
 
         _t['misc'].tic()
 
+        gpunms_time = 0
+        cpu_time = 0
+        sort_time = 0
+        for j in range(1, num_classes):
+            inds = torch.nonzero(scores[:,j]>thresh).view(-1)
+          # if there is det
+            if inds.numel() > 0:
+                _t['sort'].tic()
+                cls_scores = scores[:,j][inds]
+                _, order = torch.sort(cls_scores, 0, True)
+                cls_boxes = boxes[inds, :]
+                sort_time += _t['sort'].toc()
+
+                _t['nms'].tic()
+                cls_dets = torch.cat((cls_boxes, cls_scores), 1)
+                cls_dets = cls_dets[order]
+                keep = nms(cls_dets, 0.45)
+                gpunms_time += _t['nms'].toc()
+                _t['cpu'].tic()
+                cls_dets = cls_dets[keep.view(-1).long()]
+                all_boxes[j][i] = cls_dets.cpu().numpy()
+                cpu_time +=_t['cpu'].toc()
+            else:
+                all_boxes[j][i] = empty_array
+
+      # Limit to max_per_image detections *over all classes*
+        if max_per_image > 0:
+            image_scores = np.hstack([all_boxes[j][i][:, -1]
+                                    for j in range(1, num_classes)])
+            if len(image_scores) > max_per_image:
+                image_thresh = np.sort(image_scores)[-max_per_image]
+                for j in range(1, num_classes):
+                    keep = np.where(all_boxes[j][i][:, -1] >= image_thresh)[0]
+                    all_boxes[j][i] = all_boxes[j][i][keep, :]
+
+        nms_time = _t['misc'].toc()
+
+        '''
         for j in range(1, num_classes):
             inds = np.where(scores[:, j] > thresh)[0]
             if len(inds) == 0:
@@ -111,13 +155,9 @@ def test_net(save_folder, net, detector, cuda, testset, transform, max_per_image
             c_scores = scores[inds, j]
             c_dets = np.hstack((c_bboxes, c_scores[:, np.newaxis])).astype(
                 np.float32, copy=False)
-            if args.dataset == 'VOC':
-                cpu = True
-            else:
-                cpu = False
 
-            keep = nms(c_dets, 0.45, force_cpu=cpu)
-            keep = keep[:50]
+            keep = nms(c_dets, 0.45, force_cpu =True)
+            #keep = keep[:50]
             c_dets = c_dets[keep, :]
             all_boxes[j][i] = c_dets
         if max_per_image > 0:
@@ -130,17 +170,25 @@ def test_net(save_folder, net, detector, cuda, testset, transform, max_per_image
 
         nms_time = _t['misc'].toc()
 
+        '''
         if i % 20 == 0:
-            print('im_detect: {:d}/{:d} {:.3f}s {:.3f}s'
-                .format(i + 1, num_images, detect_time, nms_time))
+            print('im_detect: {:d}/{:d} {:.3f}s {:.3f}s, input time: {:.3f}, gpunms: {:.3f}, cpu: {:.3f}, sort: {:.3f}'
+                .format(i + 1, num_images, detect_time, nms_time,input_time,gpunms_time,cpu_time,sort_time))
             _t['im_detect'].clear()
             _t['misc'].clear()
+            _t['input'].clear()
+            _t['nms'].clear()
+            _t['cpu'].clear()
+            _t['sort'].clear()
+
+    total_time = _t['total'].toc()
 
     with open(det_file, 'wb') as f:
         pickle.dump(all_boxes, f, pickle.HIGHEST_PROTOCOL)
 
     print('Evaluating detections')
     testset.evaluate_detections(all_boxes, save_folder)
+    print('Total evaluation time: {:.3f}s, average time: {:.3f}s'.format(total_time, total_time/ num_images))
 
 
 if __name__ == '__main__':
@@ -177,8 +225,6 @@ if __name__ == '__main__':
     if args.cuda:
         net = net.cuda()
         cudnn.benchmark = True
-    else:
-        net = net.cpu()
     # evaluation
     #top_k = (300, 200)[args.dataset == 'COCO']
     top_k = 200
