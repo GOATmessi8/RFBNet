@@ -18,8 +18,8 @@ Inspired by the structure of Receptive Fields (RFs) in human visual systems, we 
 | [R-FCN (ResNet-101)](https://github.com/daijifeng001/R-FCN)| 80.5| 9 |
 | [SSD300* (VGG16)](https://github.com/weiliu89/caffe/tree/ssd) | 77.2 | 46 |
 | [SSD512* (VGG16)](https://github.com/weiliu89/caffe/tree/ssd) | 79.8 | 19 |
-| RFBNet300 (VGG16) | **80.5** |**83\*** | 
-| RFBNet512 (VGG16) | **82.2** | **38\*** | 
+| RFBNet300 (VGG16) | **80.5** |**83** | 
+| RFBNet512 (VGG16) | **82.2** | **38** | 
 
 ### COCO 
 | System |  *test-dev mAP* | **Time** (Titan X Maxwell) |
@@ -29,16 +29,16 @@ Inspired by the structure of Receptive Fields (RFs) in human visual systems, we 
 | [SSD300* (VGG16)](https://github.com/weiliu89/caffe/tree/ssd) | 25.1 | 22ms |
 | [SSD512* (VGG16)](https://github.com/weiliu89/caffe/tree/ssd) | 28.8 | 53ms |
 | [RetinaNet500 (ResNet-101-FPN)](https://arxiv.org/pdf/1708.02002.pdf) | 34.4| 90ms|
-| RFBNet300 (VGG16) | **30.3** |**15ms\*** | 
-| RFBNet512 (VGG16) | **33.8** | **30ms\*** |
-| RFBNet512-E (VGG16) | **34.4** | **33ms\*** |  
+| RFBNet300 (VGG16) | **30.3** |**15ms** | 
+| RFBNet512 (VGG16) | **33.8** | **30ms** |
+| RFBNet512-E (VGG16) | **34.4** | **33ms** |  
 
 
 ### MobileNet
 |System |COCO *minival mAP*| **\#parameters**|
 |:-------|:-----:|:-------:|
 |[SSD MobileNet](https://arxiv.org/abs/1704.04861)| 19.3| 6.8M|
-|RFB MobileNet| 20.7\* | 7.4M|
+|RFB MobileNet| 20.7 | 7.4M|
 
 
 ### Citing RFB Net
