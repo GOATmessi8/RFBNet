@@ -8,8 +8,6 @@ import torchvision.models as models
 import torch.backends.cudnn as cudnn
 import os
 
-from pyinn.modules import Conv2dDepthwise
-
 class BasicConv(nn.Module):
 
     def __init__(self, in_planes, out_planes, kernel_size, stride=1, padding=0, dilation=1, groups=1, relu=True, bn=True, bias=False):
@@ -32,7 +30,7 @@ class BasicSepConv(nn.Module):
     def __init__(self, in_planes, kernel_size, stride=1, padding=0, dilation=1, groups=1, relu=True, bn=True, bias=False):
         super(BasicSepConv, self).__init__()
         self.out_channels = in_planes
-        self.conv = Conv2dDepthwise(in_planes, kernel_size=kernel_size, stride=stride, padding=padding, dilation=dilation, bias=bias)
+        self.conv = nn.Conv2d(in_planes, in_planes, kernel_size=kernel_size, stride=stride, padding=padding, dilation=dilation, groups = in_planes, bias=bias)
         self.bn = nn.BatchNorm2d(in_planes,eps=1e-5, momentum=0.01, affine=True) if bn else None
         self.relu = nn.ReLU(inplace=True) if relu else None
 
@@ -240,7 +238,7 @@ def conv_bn(inp,oup,stride):
 
 def conv_dw(inp, oup, stride):
     return nn.Sequential(
-            Conv2dDepthwise(inp, kernel_size=3, stride=stride, padding=1, bias=False),
+            nn.Conv2d(inp,inp, kernel_size=3, stride=stride, padding=1,groups = inp, bias=False),
             nn.BatchNorm2d(inp),
             nn.ReLU(inplace=True),
 
