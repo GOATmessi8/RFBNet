@@ -4,7 +4,6 @@ import math
 import numpy as np
 if torch.cuda.is_available():
     import torch.backends.cudnn as cudnn
-    torch.set_default_tensor_type('torch.cuda.FloatTensor')
 
 
 def point_form(boxes):
@@ -296,3 +295,5 @@ def nms(boxes, scores, overlap=0.5, top_k=200):
         # keep only elements with an IoU <= overlap
         idx = idx[IoU.le(overlap)]
     return keep, count
+
+

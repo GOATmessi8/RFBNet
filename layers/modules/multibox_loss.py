@@ -6,7 +6,6 @@ from utils.box_utils import match, log_sum_exp
 GPU = False
 if torch.cuda.is_available():
     GPU = True
-    torch.set_default_tensor_type('torch.cuda.FloatTensor')
 
 
 class MultiBoxLoss(nn.Module):
@@ -93,7 +92,7 @@ class MultiBoxLoss(nn.Module):
         loss_c = log_sum_exp(batch_conf) - batch_conf.gather(1, conf_t.view(-1,1))
 
         # Hard Negative Mining
-        loss_c[pos.view(-1)] = 0 # filter out pos boxes for now
+        loss_c[pos.view(-1,1)] = 0 # filter out pos boxes for now
         loss_c = loss_c.view(num, -1)
         _,loss_idx = loss_c.sort(1, descending=True)
         _,idx_rank = loss_idx.sort(1)
@@ -110,7 +109,7 @@ class MultiBoxLoss(nn.Module):
 
         # Sum of losses: L(x,c,l,g) = (Lconf(x, c) + αLloc(x,l,g)) / N
 
-        N = num_pos.data.sum()
+        N = max(num_pos.data.sum().float(), 1)
         loss_l/=N
         loss_c/=N
         return loss_l,loss_c

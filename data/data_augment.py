@@ -3,10 +3,6 @@ Dataset classes.
 
 The data augmentation procedures were interpreted from @weiliu89's SSD paper
 http://arxiv.org/abs/1512.02325
-
-TODO: implement data_augment for training
-
-Ellis Brown, Max deGroot
 """
 
 import torch

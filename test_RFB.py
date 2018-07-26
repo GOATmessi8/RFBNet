@@ -31,6 +31,8 @@ parser.add_argument('--save_folder', default='eval/', type=str,
                     help='Dir to save results')
 parser.add_argument('--cuda', default=True, type=bool,
                     help='Use cuda to train model')
+parser.add_argument('--cpu', default=False, type=bool,
+                    help='Use cpu nms')
 parser.add_argument('--retest', default=False, type=bool,
                     help='test cache results')
 args = parser.parse_args()
@@ -54,9 +56,10 @@ else:
     print('Unkown version!')
 
 priorbox = PriorBox(cfg)
-priors = Variable(priorbox.forward(), volatile=True)
-if not args.cuda:
-    priors = priors.cpu()
+with torch.no_grad():
+    priors = priorbox.forward()
+    if args.cuda:
+        priors = priors.cuda()
 
 
 def test_net(save_folder, net, detector, cuda, testset, transform, max_per_image=300, thresh=0.005):
@@ -82,9 +85,13 @@ def test_net(save_folder, net, detector, cuda, testset, transform, max_per_image
 
     for i in range(num_images):
         img = testset.pull_image(i)
-        x = Variable(transform(img).unsqueeze(0),volatile=True)
-        if cuda:
-            x = x.cuda()
+        scale = torch.Tensor([img.shape[1], img.shape[0],
+                             img.shape[1], img.shape[0]])
+        with torch.no_grad():
+            x = transform(img).unsqueeze(0)
+            if cuda:
+                x = x.cuda()
+                scale = scale.cuda()
 
         _t['im_detect'].tic()
         out = net(x)      # forward pass
@@ -93,12 +100,10 @@ def test_net(save_folder, net, detector, cuda, testset, transform, max_per_image
         boxes = boxes[0]
         scores=scores[0]
 
+        boxes *= scale
         boxes = boxes.cpu().numpy()
         scores = scores.cpu().numpy()
         # scale each detection back up to the image
-        scale = torch.Tensor([img.shape[1], img.shape[0],
-                             img.shape[1], img.shape[0]]).cpu().numpy()
-        boxes *= scale
 
         _t['misc'].tic()
 
@@ -111,13 +116,8 @@ def test_net(save_folder, net, detector, cuda, testset, transform, max_per_image
             c_scores = scores[inds, j]
             c_dets = np.hstack((c_bboxes, c_scores[:, np.newaxis])).astype(
                 np.float32, copy=False)
-            if args.dataset == 'VOC':
-                cpu = True
-            else:
-                cpu = False
 
-            keep = nms(c_dets, 0.45, force_cpu=cpu)
-            keep = keep[:50]
+            keep = nms(c_dets, 0.45, force_cpu=args.cpu)
             c_dets = c_dets[keep, :]
             all_boxes[j][i] = c_dets
         if max_per_image > 0:

@@ -99,7 +99,7 @@ if args.resume_net == None:
         for key in m.state_dict():
             if key.split('.')[-1] == 'weight':
                 if 'conv' in key:
-                    init.kaiming_normal(m.state_dict()[key], mode='fan_out')
+                    init.kaiming_normal_(m.state_dict()[key], mode='fan_out')
                 if 'bn' in key:
                     m.state_dict()[key][...] = 1
             elif key.split('.')[-1] == 'bias':
@@ -146,7 +146,11 @@ optimizer = optim.SGD(net.parameters(), lr=args.lr,
 
 criterion = MultiBoxLoss(num_classes, 0.5, True, 0, True, 3, 0.5, False)
 priorbox = PriorBox(cfg)
-priors = Variable(priorbox.forward(), volatile=True)
+with torch.no_grad():
+    priors = priorbox.forward()
+    if args.cuda:
+        priors = priors.cuda()
+
 
 
 def train():
@@ -207,10 +211,10 @@ def train():
 
         if args.cuda:
             images = Variable(images.cuda())
-            targets = [Variable(anno.cuda(),volatile=True) for anno in targets]
+            targets = [Variable(anno.cuda()) for anno in targets]
         else:
             images = Variable(images)
-            targets = [Variable(anno, volatile=True) for anno in targets]
+            targets = [Variable(anno) for anno in targets]
         # forward
         t0 = time.time()
         out = net(images)
@@ -221,14 +225,14 @@ def train():
         loss.backward()
         optimizer.step()
         t1 = time.time()
-        loc_loss += loss_l.data[0]
-        conf_loss += loss_c.data[0]
+        loc_loss += loss_l.item()
+        conf_loss += loss_c.item()
         load_t1 = time.time()
         if iteration % 10 == 0:
             print('Epoch:' + repr(epoch) + ' || epochiter: ' + repr(iteration % epoch_size) + '/' + repr(epoch_size)
                   + '|| Totel iter ' +
                   repr(iteration) + ' || L: %.4f C: %.4f||' % (
-                loss_l.data[0],loss_c.data[0]) + 
+                loss_l.item(),loss_c.item()) + 
                 'Batch time: %.4f sec. ||' % (load_t1 - load_t0) + 'LR: %.8f' % (lr))
 
     torch.save(net.state_dict(), args.save_folder +
