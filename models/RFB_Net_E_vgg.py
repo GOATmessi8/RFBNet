@@ -243,7 +243,7 @@ class RFBNet(nn.Module):
         for k in range(23, len(self.base)):
             x = self.base[k](x)
         s2 = self.up_reduce(x)
-        s2 = F.upsample(s2, scale_factor=2, mode='bilinear')
+        s2 = F.upsample(s2, scale_factor=2, mode='bilinear', align_corners=True)
         s = torch.cat((s1,s2),1)
 
         ss = self.Norm(s)
