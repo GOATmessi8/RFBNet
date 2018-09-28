@@ -3,7 +3,7 @@
 By Songtao Liu, Di Huang, Yunhong Wang
 
 ### Introduction
-Inspired by the structure of Receptive Fields (RFs) in human visual systems, we propose a novel RF Block (RFB) module, which takes the relationship between the size and eccentricity of RFs into account, to enhance the discriminability and robustness of features. We further  assemble the RFB module to the top of SSD with a lightweight CNN model, constructing the RFB Net detector. You can use the code to train/evaluate the RFB Net for object detection. For more details, please refer to our [arXiv paper](https://arxiv.org/pdf/1711.07767.pdf). 
+Inspired by the structure of Receptive Fields (RFs) in human visual systems, we propose a novel RF Block (RFB) module, which takes the relationship between the size and eccentricity of RFs into account, to enhance the discriminability and robustness of features. We further  assemble the RFB module to the top of SSD with a lightweight CNN model, constructing the RFB Net detector. You can use the code to train/evaluate the RFB Net for object detection. For more details, please refer to our [ECCV paper](https://eccv2018.org/openaccess/content_ECCV_2018/papers/Songtao_Liu_Receptive_Field_Block_ECCV_2018_paper.pdf). 
 
 <img align="right" src="https://github.com/ruinmessi/RFBNet/blob/master/doc/RFB.png">
 
@@ -44,11 +44,12 @@ Inspired by the structure of Receptive Fields (RFs) in human visual systems, we 
 ### Citing RFB Net
 Please cite our paper in your publications if it helps your research:
 
-    @article{liu2017RFB,
-        title = {Receptive Field Block Net for Accurate and Fast Object Detection},
-        author = {Songtao Liu, Di Huang and Yunhong Wang},
-        booktitle = {arxiv preprint arXiv:1711.07767},
-        year = {2017}
+    @InProceedings{Liu_2018_ECCV,
+    author = {Liu, Songtao and Huang, Di and Wang, andYunhong},
+    title = {Receptive Field Block Net for Accurate and Fast Object Detection},
+    booktitle = {The European Conference on Computer Vision (ECCV)},
+    month = {September},
+    year = {2018}
     }
 
 ### Contents
