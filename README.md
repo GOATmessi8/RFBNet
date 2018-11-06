@@ -141,6 +141,7 @@ By default, it will directly output the mAP results on VOC2007 *test* or COCO *m
 ## Models
 
 * 07+12 [RFB_Net300](https://drive.google.com/open?id=1apPyT3IkNwKhwuYyp432IJrTd0QHGbIN), [BaiduYun Driver](https://pan.baidu.com/s/1xOp3_FDk49YlJ-6C-xQfHw)
+* COCO [RFB_Net300](https://pan.baidu.com/s/1vL_oNwhj0ksK593nApqDLw)
 * COCO [RFB_Net512_E](https://drive.google.com/open?id=1pHDc6Xg9im3affOr7xaimXaRNOHtbaPM), [BaiduYun Driver](https://pan.baidu.com/s/1o8dxrom)
 * COCO [RFB_Mobile Net300](https://drive.google.com/open?id=1vmbTWWgeMN_qKVWOeDfl1EN9c7yHPmOe), [BaiduYun Driver](https://pan.baidu.com/s/1bp4ik1L)
 
