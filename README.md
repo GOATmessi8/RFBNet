@@ -2,6 +2,7 @@
 
 By Songtao Liu, Di Huang, Yunhong Wang
 
+## Updatas (2021/07/23): YOLOX is [here!](https://github.com/Megvii-BaseDetection/YOLOX), stronger YOLO with ONNX, TensorRT, ncnn, and OpenVino supported!!
 ## Updates: we propose a new method to get 42.4 mAP at 45 FPS on COCO, code is available [here](https://github.com/ruinmessi/ASFF)
 
 ### Introduction
