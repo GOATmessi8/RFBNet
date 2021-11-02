@@ -3,6 +3,6 @@ cd ./utils/
 
 CUDA_PATH=/usr/local/cuda/
 
-python build.py build_ext --inplace
+python build.py build_ext --inplace --force
 
 cd ..
